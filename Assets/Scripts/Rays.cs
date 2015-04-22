@@ -4,7 +4,7 @@ using System.Collections;
 public class Rays : MonoBehaviour {
 	public GameObject OVRCamera;
 
-
+	public BigScreen screen;
 	public GameObject heart;
 	public GameObject fragments;
 	public GameObject circle;
@@ -50,15 +50,20 @@ public class Rays : MonoBehaviour {
 				}
 
 
-				if (image_hits == 2) {
+				if (image_hits == 2 && hit.transform.gameObject.GetComponent<VideoScreen>().loadedTexture != screen.GetComponent<Renderer> ().material.mainTexture) {
 					ImagePlane.preload_audio();
 				}
 
-				if (image_hits == 250) {
+				if (image_hits == 150) {
 					ImagePlane.load_image();
 				}
 
 			} else {
+				if (ImagePlane != null && 
+				    ImagePlane.GetComponent<VideoScreen>().loadedTexture != 
+				    screen.GetComponent<Renderer> ().material.mainTexture) {
+					ImagePlane.disable_audio();
+				}
 				ImagePlane = hit.transform.gameObject.GetComponent<VideoScreen>();
 				image_hits = 0;
 				disable ();

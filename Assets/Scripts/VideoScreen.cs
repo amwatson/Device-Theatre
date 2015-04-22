@@ -3,7 +3,6 @@ using System.Collections;
 
 public class VideoScreen : MonoBehaviour {
 	public MovieTexture loadedTexture;
-	public AudioClip clip;
 	public AudioSource audio;
 
 	public BigScreen screen;
@@ -27,11 +26,14 @@ public class VideoScreen : MonoBehaviour {
 	}
 
 	public void preload_audio() {
-		audio.clip = clip;
+		audio.clip = loadedTexture.audioClip;
 		audio.clip.LoadAudioData();
 		audio.volume = 0.0f;
 		audio.enabled = true;
 		audio.Play ();
-		//screen.preload_audio (loadedTexture);
+	}
+
+	public void disable_audio() {
+		audio.enabled = false;
 	}
 }

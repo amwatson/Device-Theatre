@@ -21,6 +21,9 @@ public class BigScreen : MonoBehaviour {
 	public void setTexture(MovieTexture T, AudioSource audio) {
 		GetComponent<Renderer> ().material.mainTexture = T;
 		//T.loop = true;
+		if (Source != null) {
+			Source.enabled = false;
+		}
 		Source = audio;
 		//Source.clip.LoadAudioData();
 
