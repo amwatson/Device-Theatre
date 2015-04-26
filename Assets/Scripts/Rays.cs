@@ -41,7 +41,7 @@ public class Rays : MonoBehaviour {
 
 			if (ImagePlane != null && hit.transform.gameObject.name == ImagePlane.name) {
 				image_hits++;
-				if (image_hits > 100) {
+				if (image_hits > 150) {
 					circle.GetComponent<Renderer> ().material.color = new Color(2.0F, .85F, .85F);
 					fragments.SetActive(false);
 					heart.GetComponent<Animation>().Stop();
