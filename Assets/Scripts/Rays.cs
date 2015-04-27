@@ -10,6 +10,7 @@ public class Rays : MonoBehaviour {
 	public GameObject circle;
 	public GameObject glow;
 	VideoScreen ImagePlane = null;
+	VideoScreen ImagePlane_cur = null;
 
 	
 	public int image_hits = 0;
@@ -31,7 +32,7 @@ public class Rays : MonoBehaviour {
 
 		RaycastHit hit;
 		// TODO probs an alternative to a raycast every frame
-		if (Physics.Raycast(OVRCamera.transform.position, OVRCamera.transform.forward, out hit, 100000.0F)) {
+		if (Physics.Raycast(OVRCamera.transform.position, OVRCamera.transform.forward, out hit, 150000.0F)) {
 
 
 			transform.position = hit.point;
@@ -39,7 +40,7 @@ public class Rays : MonoBehaviour {
 			transform.rotation = temp_rotation;
 			transform.Rotate(90, 0, 0);
 
-			if (ImagePlane != null && hit.transform.gameObject.name == ImagePlane.name) {
+			if (ImagePlane_cur != null && hit.transform.gameObject.name == ImagePlane_cur.name) {
 				image_hits++;
 				if (image_hits > 150) {
 					circle.GetComponent<Renderer> ().material.color = new Color(2.0F, .85F, .85F);
@@ -51,20 +52,21 @@ public class Rays : MonoBehaviour {
 
 
 				if (image_hits == 2 && hit.transform.gameObject.GetComponent<VideoScreen>().loadedTexture != screen.GetComponent<Renderer> ().material.mainTexture) {
-					ImagePlane.preload_audio();
+					ImagePlane_cur.preload_audio();
 				}
 
 				if (image_hits == 150) {
-					ImagePlane.load_image();
+					ImagePlane_cur.load_image();
+
 				}
 
 			} else {
-				if (ImagePlane != null && 
-				    ImagePlane.GetComponent<VideoScreen>().loadedTexture != 
+				if (ImagePlane_cur != null && 
+				    ImagePlane_cur.GetComponent<VideoScreen>().loadedTexture != 
 				    screen.GetComponent<Renderer> ().material.mainTexture) {
-					ImagePlane.disable_audio();
+					ImagePlane_cur.disable_audio();
 				}
-				ImagePlane = hit.transform.gameObject.GetComponent<VideoScreen>();
+				ImagePlane_cur = hit.transform.gameObject.GetComponent<VideoScreen>();
 				image_hits = 0;
 				disable ();
 			}
@@ -75,18 +77,24 @@ public class Rays : MonoBehaviour {
 
 
 	void enable_progress() {
+
 		heart.SetActive(true);
 		fragments.SetActive(true);
 		
 
-		heart.GetComponent<Renderer> ().material.color = new Color((1.0F/100.0F)*image_hits+.5F, 
-		                                                           (.100F/100.0F)*image_hits+.5F, (.100F/100.0F)*image_hits+.5F);
-		fragments.GetComponent<Renderer> ().material.color = new Color((1.0F/100.0F)*image_hits+.5F, 
-		                                                               (.100F/100.0F)*image_hits+.5F, (.100F/100.0F)*image_hits+.5F);
-		circle.GetComponent<Renderer> ().material.color = new Color((2.0F/100.0F)*image_hits, 
-		                                                            (.85F/100.0F)*image_hits, (.85F/100.0F)*image_hits);
-		if (image_hits == 100 - 50) {
+		heart.GetComponent<Renderer> ().material.color = new Color((1.0F/150.0F)*image_hits+.5F, 
+		                                                           (.150F/150.0F)*image_hits+.5F, (.150F/150.0F)*image_hits+.5F);
+		fragments.GetComponent<Renderer> ().material.color = new Color((1.0F/150.0F)*image_hits+.5F, 
+		                                                               (.150F/150.0F)*image_hits+.5F, (.150F/150.0F)*image_hits+.5F);
+		circle.GetComponent<Renderer> ().material.color = new Color((2.0F/150.0F)*image_hits, 
+		                                                            (.85F/150.0F)*image_hits, (.85F/150.0F)*image_hits);
+		if (image_hits == 150 - 50) {
+	
 			glow.SetActive (true);
+		}
+		if (image_hits >= 150 - 50) {
+			Color c_orig = ImagePlane_cur.GetComponent<Renderer> ().material.color;
+			ImagePlane_cur.GetComponent<Renderer> ().material.color = new Color(c_orig.r+.45f, c_orig.g+.1f, c_orig.b+.1f, c_orig.a);
 		}
 	}
 	
